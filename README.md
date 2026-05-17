@@ -19,12 +19,28 @@ A lightweight, real-time desktop application designed for university class repre
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/YOUR-USERNAME/hall-registry-app.git](https://github.com/YOUR-USERNAME/hall-registry-app.git)
+   git clone [https://github.com/YayaGhost/hall-registry-app.git](https://github.com/YayaGhost/hall-registry-app.git)
    cd hall-registry-app
+   ```
+
+### 2. Set Up Virtual Environment (Recommended)
+
+#### Windows:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+#### Linux/macOS:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
 2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
+   ```
    
 3. **Add Firebase Credentials:**
    * Obtain your `serviceAccountKey.json` from your Firebase project console.
@@ -34,3 +50,4 @@ A lightweight, real-time desktop application designed for university class repre
 4. **Run the application:**
    ```bash
    python main.py
+   ```
