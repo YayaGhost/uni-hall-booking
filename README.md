@@ -23,15 +23,15 @@ A lightweight, real-time desktop application designed for university class repre
    cd hall-registry-app
    ```
 
-2. **Set Up Virtual Environment (Recommended)**
+2. **Set Up Virtual Environment (Recommended):**
 
-#### Windows:
+Windows:
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-#### Linux/macOS:
+Linux/macOS:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
