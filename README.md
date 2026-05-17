@@ -19,11 +19,11 @@ A lightweight, real-time desktop application designed for university class repre
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/YayaGhost/hall-registry-app.git](https://github.com/YayaGhost/hall-registry-app.git)
+   git clone https://github.com/YayaGhost/hall-registry-app.git
    cd hall-registry-app
    ```
 
-### 2. Set Up Virtual Environment (Recommended)
+2. **Set Up Virtual Environment (Recommended)**
 
 #### Windows:
 ```bash
