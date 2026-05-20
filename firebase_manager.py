@@ -1,28 +1,34 @@
 import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+from firebase_admin import credentials,firestore
+from PyQt6.QtCore import pyqtSignal, QObject
 
-def test_firestore_connection():
-    try:
-        cred = credentials.Certificate("serviceAccountKey.json")
-        firebase_admin.initialize_app(cred)
+class FirebaseManager(QObject):
+    #send hall data to main.py ui for realtime updates        
+    halls_updated = pyqtSignal(dict)
+    
+    def __init__(self):
+        super().__init__()
         
-        db = firestore.client()
-        print("Successful Connection!")
+        if not firebase_admin._apps:
+            cred = credentials.Certificate("serviceAccountKey.json")
+            firebase_admin.initialize_app(cred)
+            
+        self.db = firestore.client()
+        self.listener = None
 
-        hall_ref = db.collection('halls').document('501')
-        hall_ref.set({
-            'name': 'Hall 501',
-            'capacity': 100,
-            'location': 'Building A'
-        })
-
-        halls_ref = db.collection('halls')
-        docs = halls_ref.stream()
-        for doc in docs:
-            print(f'{doc.id} => {doc.to_dict()}')
-    except Exception as e:
-        print(f"Error connecting to Firestore: {e}")
-if __name__ == "__main__":
-    test_firestore_connection()
-        
+    def start_listener(self):
+        col_ref = self.db.collection('halls')
+        self.listener = col_ref.on_snapshot(self._on_snapshot_callback)
+    
+    def _on_snapshot_callback(self,col_snapshot,changes,read_time):
+        hall_data = {}
+        for doc in col_snapshot:
+            hall_data[doc.id] = doc.to_dict().get('status','unknown')
+        self.halls_updated.emit(hall_data)
+    def book_hall(self, hall_id):
+        try:
+            doc_ref = self.db.collection('halls').document(hall_id)
+            doc_ref.update({'status': 'booked'})
+        except Exception as e:
+            return False, str(e)
+        return True, "Hall booked successfully"
