@@ -23,19 +23,19 @@ class FirebaseManager(QObject):
     def _on_snapshot_callback(self,col_snapshot,changes,read_time):
         hall_data = {}
         for doc in col_snapshot:
-            hall_data[doc.id] = doc.to_dict().get('status','unknown')
+            hall_data[doc.id] = doc.to_dict().get('periods', {})
         self.halls_updated.emit(hall_data)
-    def book_hall(self, hall_id):
+    def book_hall(self, hall_id, period):
         try:
             doc_ref = self.db.collection('halls').document(hall_id)
-            doc_ref.update({'status': 'booked'})
+            doc_ref.update({f'periods.{period}': 'booked'})
         except Exception as e:
             return False, str(e)
         return True, "Hall booked successfully"
-    def unbook_hall(self, hall_id):
+    def unbook_hall(self, hall_id, period):
         try:
             doc_ref = self.db.collection('halls').document(hall_id)
-            doc_ref.update({'status': 'available'})
+            doc_ref.update({f'periods.{period}': 'available'})
         except Exception as e:
             return False, str(e)
         return True, "Hall unbooked successfully"

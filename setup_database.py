@@ -17,8 +17,14 @@ def setup_halls():
         doc_ref = db.collection('halls').document(hall_id)
         # We set everything to 'available' by default
         batch.set(doc_ref, {
-            'status': 'available',
-            'room_name': f'Hall {hall_id}'
+            'room_name': f'Hall {hall_id}',
+            'periods': {
+                '08:30 AM - 10:00 AM': 'available',
+                '10:15 AM - 11:45 AM': 'available',
+                '12:15 PM - 01:45 PM': 'available',
+                '02:00 PM - 03:30 PM': 'available',
+                '03:30 PM - 05:00 PM': 'available'
+            }
         })
         
     # Commit the batch write to Firebase
