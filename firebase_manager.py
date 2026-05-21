@@ -32,3 +32,10 @@ class FirebaseManager(QObject):
         except Exception as e:
             return False, str(e)
         return True, "Hall booked successfully"
+    def unbook_hall(self, hall_id):
+        try:
+            doc_ref = self.db.collection('halls').document(hall_id)
+            doc_ref.update({'status': 'available'})
+        except Exception as e:
+            return False, str(e)
+        return True, "Hall unbooked successfully"

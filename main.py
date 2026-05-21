@@ -67,6 +67,11 @@ class HallBookingUI(QMainWindow):
                 QPushButton#available { background-color: #629924; color: white; }
                 QPushButton#available:hover { background-color: #72a934; }
                 QPushButton#booked { background-color: #302e2b; color: #666666; }
+                QPushButton#booked:hover { background-color: #8C1A10; color: #666666; }
+                QMessageBox { background-color: #262421; }
+                QMessageBox QLabel { background-color: transparent; color: #ffffff; font-size: 14px; font-weight: normal; }
+                QMessageBox QPushButton { background-color: #302e2b; color: #bababa; border-radius: 3px; padding: 8px 15px; min-width: 80px; font-size: 13px; }
+                QMessageBox QPushButton:hover { background-color: #403e3b; color: #ffffff; }
             """)
             self.theme_btn.setIcon(QIcon(self.light_mode))
         else:
@@ -79,6 +84,11 @@ class HallBookingUI(QMainWindow):
                 QPushButton#available { background-color: #7fb041; color: white; }
                 QPushButton#available:hover { background-color: #8fc051; }
                 QPushButton#booked { background-color: #cccccc; color: #888888; }
+                QPushButton#booked:hover { background-color: #8B1A10; color: #888888; }
+                QMessageBox { background-color: #ffffff; }
+                QMessageBox QLabel { background-color: transparent; color: #2b2b2b; font-size: 14px; font-weight: normal; }
+                QMessageBox QPushButton { background-color: #edebe9; color: #2b2b2b; border-radius: 3px; padding: 8px 15px; min-width: 80px; font-size: 13px; }
+                QMessageBox QPushButton:hover { background-color: #dcdad8; }
             """)
             self.theme_btn.setIcon(QIcon(self.dark_mode))
         
@@ -92,7 +102,8 @@ class HallBookingUI(QMainWindow):
                 btn.setCursor(Qt.CursorShape.PointingHandCursor)
                 self.hall_buttons[hall_id] = btn
                 
-                btn.clicked.connect(lambda checked, h=hall_id: self.confirm_booking(h))
+                btn.setEnabled(True)
+                btn.clicked.connect(lambda checked, h=hall_id: self.hall_clicked(h))
                 
                 count = len(self.hall_buttons) - 1
                 row = count // 3
@@ -103,14 +114,19 @@ class HallBookingUI(QMainWindow):
             if status == "available":
                 btn.setObjectName("available")
                 btn.setText(f"{hall_id}\nAvailable")
-                btn.setEnabled(True)
             else:
                 btn.setObjectName("booked")
                 btn.setText(f"{hall_id}\nBooked")
-                btn.setEnabled(False)
         self.apply_theme()
         
-    def confirm_booking(self, hall_id):
+    def hall_clicked(self, hall_id):
+        btn = self.hall_buttons[hall_id]
+        if btn.objectName() == "available":
+            self._confirm_booking(hall_id)
+        elif btn.objectName() == "booked":
+            self._confirm_unbooking(hall_id)
+        
+    def _confirm_booking(self, hall_id):
         reply = QMessageBox.question(
             self, "Confirm Booking",
             f"Do you want to book {hall_id}?",
@@ -121,6 +137,18 @@ class HallBookingUI(QMainWindow):
             success, msg = self.db_manager.book_hall(hall_id)
             if not success:
                 QMessageBox.critical(self, "Booking Failed", msg)
+
+    def _confirm_unbooking(self, hall_id):
+        reply = QMessageBox.question(
+            self, "Confirm Unbooking",
+            f"Do you want to unbook {hall_id}?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        if reply == QMessageBox.StandardButton.Yes:
+            success, msg = self.db_manager.unbook_hall(hall_id)
+            if not success:
+                QMessageBox.critical(self, "Unbooking Failed", msg)
 
 if __name__ == "__main__":
     app = QApplication([])
