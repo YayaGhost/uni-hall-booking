@@ -41,7 +41,7 @@ class LoginDialog(QDialog):
         self.code_input = QLineEdit()
         self.code_input.setPlaceholderText("Enter Department Passcode")
         self.code_input.setEchoMode(QLineEdit.EchoMode.PasswordEchoOnEdit)
-        self.code_input.setStyleSheet("padding: 8px; background-color: #302e2b; border-radius: 4px; border: 1px solid #403e3b;")
+        self.code_input.setStyleSheet("padding: 4px; background-color: #302e2b; border-radius: 4px; border: 1px solid #403e3b;")
 
         #remember me checkbox
         self.remember_cb = QCheckBox("Remember me")
@@ -51,7 +51,7 @@ class LoginDialog(QDialog):
         #login btn
         self.login_btn = QPushButton("Login")
         self.login_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.login_btn.setStyleSheet("background-color: #629924; padding: 10px; border-radius: 4px; font-weight: bold;")
+        self.login_btn.setStyleSheet("background-color: #629924; padding: 4px; border-radius: 4px; font-weight: bold;")
         self.login_btn.clicked.connect(self.verify_login)
 
         layout.addWidget(QLabel("Select Department:"))
